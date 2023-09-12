@@ -6,8 +6,8 @@ const productsRouter = require('./routes/products');
 const cartsRouter = require('./routes/carts');
 
 
-app.use('/products', productsRouter);
-app.use('/carts', cartsRouter);
+app.use('/routes/products', productsRouter);
+app.use('/routes/carts', cartsRouter);
 
 
 const PORT = 8080;
