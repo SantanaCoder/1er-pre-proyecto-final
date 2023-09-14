@@ -1,35 +1,35 @@
 const express = require('express');
 const router = express.Router();
+const fs = require('fs');
 const bodyParser = require('body-parser');
+const productosData = fs.readFileSync('src/database/productos.json', 'utf8');
+const productos = JSON.parse(productosData);
+
 
 
 router.use(bodyParser.json());
 
 
-let productos = [
-  { id: 1, title: 'Guitarra', description: 'guitarra electrica', code: 'P001', price: 10, status: true, stock: 10, category: 'guitarras', thumbnails: [] },
-  { id: 2, title: 'bajo', description: 'bajo acustico', code: 'P002', price: 20, status: true, stock: 20, category: 'cuerdas', thumbnails: [] },
-  { id: 3, title: 'bateria', description: 'bateria completa', code: 'P003', price: 30, status: true, stock: 30, category: 'percusion', thumbnails: [] },
- 
-];
 
+router.get('/api/products', (req, res) => {
+  res.json({ products: productos })
+});
 
-function generarNuevoID() {
-  return productos.length > 0 ? Math.max(...productos.map(item => item.id)) + 1 : 1;
-}
+router.get('/api/products/:pid', (req, res) => {
+  const pid = parseInt(req.params.pid);
+  const producto = productos.find(p => p.id === pid);
+  res.json(producto);
+});
 
-router.post('/', (req, res) => {
+router.post('/api/products', (req, res) => {
   const { title, description, code, price, status = true, stock, category, thumbnails } = req.body;
 
- 
   if (!title || !description || !code || !price || !stock || !category) {
-    return res.status(400).json({ mensaje: 'Todos los campos son obligatorios' });
+    return res.status(400).json({ mensaje: 'Todos los campos son requeridos' });
   }
 
-o
   const nuevoID = generarNuevoID();
 
- 
   const nuevoProducto = {
     id: nuevoID,
     title,
@@ -39,13 +39,37 @@ o
     status,
     stock,
     category,
-    thumbnails: thumbnails || []
+    thumbnails,
   };
 
-  
   productos.push(nuevoProducto);
 
+  fs.writeFileSync('src/database/productos.json', JSON.stringify(productos, null, 2));
+
   res.status(201).json(nuevoProducto);
+});
+
+function generarNuevoID() {
+  return productos.reduce((maxID, producto) => {
+    return producto.id > maxID ? producto.id : maxID;
+  }, 0) + 1;
+}
+
+router.put('/api/products/:pid', (req, res) => {
+  const pid = req.params.pid;
+  const nuevosDatos = req.body;
+ 
+  productos = productos.map(p => (p.id === pid ? { ...p, ...nuevosDatos } : p));
+  fs.writeFileSync('src/database/productos.json', JSON.stringify(productos, null, 2));
+  res.json(productos.find(p => p.id === pid));
+});
+
+router.delete('/api/products/:pid', (req, res) => {
+  const pid = req.params.pid;
+  let productos = JSON.parse(fs.readFileSync('src/database/productos.json', 'utf8'));
+  productos = productos.filter(p => p.id !== pid);
+  fs.writeFileSync('src/database/productos.json', JSON.stringify(productos, null, 2));
+  res.json({ mensaje: 'Producto eliminado correctamente' });
 });
 
 module.exports = router;

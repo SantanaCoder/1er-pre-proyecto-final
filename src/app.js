@@ -1,13 +1,15 @@
 const express = require('express');
+const fs = require('fs');
 const app = express();
-
-
 const productsRouter = require('./routes/products');
 const cartsRouter = require('./routes/carts');
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true}))
 
-app.use('/routes/products', productsRouter);
-app.use('/routes/carts', cartsRouter);
+
+app.use('/api/products', productsRouter);
+app.use('/api/carts', cartsRouter);
 
 
 const PORT = 8080;

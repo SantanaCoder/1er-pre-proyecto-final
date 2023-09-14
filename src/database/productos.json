@@ -1,0 +1,38 @@
+[
+  [
+    {
+      "id": 1,
+      "title": "Guitarra",
+      "description": "guitarra electrica",
+      "code": "P001",
+      "price": 10,
+      "status": true,
+      "stock": 10,
+      "category": "guitarras",
+      "thumbnails": ["https://picsum.photos/200/300"]
+    },
+    {
+      "id": 2,
+      "title": "bajo",
+      "description": "bajo acustico",
+      "code": "P002",
+      "price": 20,
+      "status": true,
+      "stock": 20,
+      "category": "cuerdas",
+      "thumbnails": ["https://picsum.photos/200/300"]
+    },
+    {
+      "id": 3,
+      "title": "bateria",
+      "description": "bateria completa",
+      "code": "P003",
+      "price": 30,
+      "status": true,
+      "stock": 30,
+      "category": "percusion",
+      "thumbnails": ["https://picsum.photos/200/300"]
+    }
+  ]
+  
+  ]
